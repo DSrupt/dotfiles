@@ -7,7 +7,6 @@ call plug#begin('~/.vim/plugged')
  Plug 'pangloss/vim-javascript'
  Plug 'ervandew/supertab' " AutoComplete
  Plug 'kien/ctrlp.vim' "Fuzzy file serach
- Plug 'tpope/vim-fugitive'
 call plug#end()
 
 set number
@@ -21,8 +20,9 @@ set number
  map <C-h> <C-W>h
  map <C-l> <C-W>l
  
- map <C-\> :!g++ % && ./a.out <CR> "TODO look into options for compiling projects. 
  filetype indent on
 
  set foldmethod=syntax 
  set so=999
+
+ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
