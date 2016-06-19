@@ -7,6 +7,7 @@ call plug#begin('~/.vim/plugged')
 	Plug 'pangloss/vim-javascript'
 	Plug 'ervandew/supertab' " AutoComplete
 	Plug 'kien/ctrlp.vim' "Fuzzy file serach
+	Plug 'qpkorr/vim-bufkill' "Kill buffer without removing window
 call plug#end()
 
 let g:rehash256 = 1 "Enables 256 color version of molokai in terminals
@@ -27,6 +28,12 @@ set splitbelow
 set splitright
 set foldmethod=syntax 
 set so=999
+set hlsearch
+
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set noexpandtab
 
 filetype indent on
 
