@@ -1,4 +1,4 @@
-source ~/.govimrc
+" source ~/.govimrc
 call plug#begin('~/.vim/plugged')
     Plug 'liuchengxu/eleline.vim'
     Plug 'mhinz/vim-startify'
@@ -23,6 +23,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'fatih/vim-go'
     Plug 'majutsushi/tagbar'
     Plug 'chriskempson/base16-vim'
+	Plug 'beautify-web/js-beautify'
+    Plug 'nightsense/office'
 call plug#end()
 
 let mapleader = '`'
@@ -31,7 +33,7 @@ map <Leader> t :Tags<CR>
 set t_Co=256
 set termguicolors
 set background=dark
-colo base16-flat
+colo office-light 
 
 map <C-j> <C-W>j
 map <C-k> <C-W>k
