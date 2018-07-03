@@ -1,11 +1,9 @@
-" source ~/.govimrc
 call plug#begin('~/.vim/plugged')
     Plug 'liuchengxu/eleline.vim'
     Plug 'mhinz/vim-startify'
     Plug 'felikz/ctrlp-py-matcher'
     Plug 'scrooloose/nerdtree'
     Plug 'xuyuanp/nerdtree-git-plugin'
-    Plug 'liuchengxu/space-vim-dark'
     Plug 'itchyny/vim-cursorword'
     Plug 'danro/rename.vim'
     Plug 'anyakichi/vim-surround'
@@ -20,20 +18,21 @@ call plug#begin('~/.vim/plugged')
     Plug 'junegunn/fzf.vim'
     Plug 'gabrielelana/vim-markdown'
 	Plug 'avakhov/vim-yaml'
-    Plug 'fatih/vim-go'
     Plug 'majutsushi/tagbar'
-    Plug 'chriskempson/base16-vim'
 	Plug 'beautify-web/js-beautify'
     Plug 'nightsense/office'
+	Plug 'bfrg/vim-cpp-modern'
+	Plug 'yuttie/comfortable-motion.vim'
+    Plug 'rhysd/vim-clang-format'
+	Plug 'kana/vim-operator-user'
+    Plug 'scrooloose/nerdcommenter'
 call plug#end()
 
 let mapleader = '`'
-map <Leader> t :Tags<CR>
 
 set t_Co=256
 set termguicolors
-set background=dark
-colo office-light 
+colo office-light
 
 map <C-j> <C-W>j
 map <C-k> <C-W>k
@@ -41,23 +40,26 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 " M-h go to tab left
-noremap ;h :tabprevious<CR>
+noremap /t :Tags<CR>
 " M-l go to tab right
-noremap ;l :tabnext<CR>
+noremap /l :tabnext<CR>
 
 " M-n create new tab
-nnoremap <Leader>; :tabnew<CR>
-" M-c close current tab
-nnoremap ç :tabclose<CR>
+nnoremap /n :tabnew<CR>
+
+nnoremap ;w :w<CR>
 
 nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
+
+" Use | and _ to split windows (while preserving original behaviour of [count]bar and [count]_).
+nnoremap <expr><silent> <Bar> v:count == 0 ? "<C-W>v<C-W><Right>" : ":<C-U>normal! 0".v:count."<Bar><CR>"
+nnoremap <expr><silent> _     v:count == 0 ? "<C-W>s<C-W><Down>"  : ":<C-U>normal! ".v:count."_<CR>"
 
 set number
 set splitbelow
 set splitright
 set foldmethod=syntax
-set so=999
 set hlsearch
 
 set tabstop=4
@@ -71,12 +73,7 @@ set textwidth=80
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 "autocmd vimenter * NERDTree
 "autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-"colorscheme space-vim-dark
 iab xdate <c-r>=strftime("%d/%m/%y %H:%M:%S")<cr>
-
-python from powerline.vim import setup as powerline_setup
-python powerline_setup()
-python del powerline_setup
 
 let g:tagbar_type_go = {
 	\ 'ctagstype' : 'go',
