@@ -22,7 +22,6 @@ call plug#begin('~/.vim/plugged')
 	Plug 'beautify-web/js-beautify'
     Plug 'nightsense/office'
 	Plug 'bfrg/vim-cpp-modern'
-	Plug 'yuttie/comfortable-motion.vim'
     Plug 'rhysd/vim-clang-format'
 	Plug 'kana/vim-operator-user'
     Plug 'scrooloose/nerdcommenter'
@@ -72,7 +71,7 @@ set textwidth=80
 
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 "autocmd vimenter * NERDTree
-"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 iab xdate <c-r>=strftime("%d/%m/%y %H:%M:%S")<cr>
 
 let g:tagbar_type_go = {
@@ -102,3 +101,7 @@ let g:tagbar_type_go = {
 	\ 'ctagsbin'  : 'gotags',
 	\ 'ctagsargs' : '-sort -silent'
 \ }
+
+
+nnoremap <leader>[ :g/\<cout\>/s/\<cout\>/\/\/cout/gi <CR>
+nnoremap <leader>] :g/\/\/cout/s/\/\/cout/cout/gi <CR>
