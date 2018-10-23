@@ -38,24 +38,24 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      helm
-     ;; auto-completion
+     auto-completion
      ;; better-defaults
      emacs-lisp
-     ;; git
-     ;; markdown
+     git
      ;; org
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;; spell-checking
-     ;; syntax-checking
-     ;; version-control
+     syntax-checking
+     version-control
+     c-c++
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(clang-format auto-complete color-theme-sanityinc-tomorrow)
+   dotspacemacs-additional-packages '(company clang-format color-theme-sanityinc-tomorrow)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -67,7 +67,8 @@ values."
    ;; `used-but-keep-unused' installs only the used packages but won't uninstall
    ;; them if they become unused. `all' installs *all* packages supported by
    ;; Spacemacs and never uninstall them. (default is `used-only')
-   dotspacemacs-install-packages 'used-only))
+   dotspacemacs-install-packages 'all
+   ))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -301,6 +302,19 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+  (defun copy-from-osx ()
+    (shell-command-to-string "pbpaste"))
+
+  (defun paste-to-osx (text &optional push)
+    (let ((process-connection-type nil))
+      (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
+        (process-send-string proc text)
+        (process-send-eof proc))))
+
+  (setq interprogram-cut-function 'paste-to-osx)
+  (setq interprogram-paste-function 'copy-from-osx)
+  (setq-default dotspacemacs-configuration-layers
+		'((c-c++ :variables c-c++-enable-clang-support t)))
   )
 
 (defun dotspacemacs/user-config ()
@@ -310,9 +324,69 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (setq-default indent-tabs-mode nil)
+  (defun xah-copy-line-or-region ()
+  "Copy current line, or text selection.
+When called repeatedly, append copy subsequent lines.
+When `universal-argument' is called first, copy whole buffer (respects `narrow-to-region').
+
+URL `http://ergoemacs.org/emacs/emacs_copy_cut_current_line.html'
+Version 2018-09-10"
+  (interactive)
+  (if current-prefix-arg
+      (progn
+        (copy-region-as-kill (point-min) (point-max)))
+    (if (use-region-p)
+        (progn
+          (copy-region-as-kill (region-beginning) (region-end)))
+      (if (eq last-command this-command)
+          (if (eobp)
+              (progn )
+            (progn
+              (kill-append "\n" nil)
+              (kill-append
+               (buffer-substring-no-properties (line-beginning-position) (line-end-position))
+               nil)
+              (progn
+                (end-of-line)
+                (forward-char))))
+        (if (eobp)
+            (if (eq (char-before) 10 )
+                (progn )
+              (progn
+                (copy-region-as-kill (line-beginning-position) (line-end-position))
+                (end-of-line)))
+          (progn
+            (copy-region-as-kill (line-beginning-position) (line-end-position))
+            (end-of-line)
+            (forward-char)))))))
+  (defun xah-cut-line-or-region ()
+    "Cut current line, or text selection.
+When `universal-argument' is called first, cut whole buffer (respects `narrow-to-region').
+
+URL `http://ergoemacs.org/emacs/emacs_copy_cut_current_line.html'
+Version 2015-06-10"
+    (interactive)
+    (if current-prefix-arg
+	(progn ; not using kill-region because we don't want to include previous kill
+	  (kill-new (buffer-string))
+	  (delete-region (point-min) (point-max)))
+      (progn (if (use-region-p)
+		 (kill-region (region-beginning) (region-end) t)
+	       (kill-region (line-beginning-position) (line-beginning-position 2))))))
+
+  (global-set-key (kbd "C-c d") 'xah-cut-line-or-region) ; cut
+  (global-set-key (kbd "C-c c") 'xah-copy-line-or-region) ; copy
+  (global-set-key (kbd "C-c y") 'yank) ; paste
+
+  (paradox-enable)
+  (global-company-mode)
+  ;; Bind clang-format-buffer to tab on the c++-mode only:
+  (add-hook 'c++-mode-hook 'clang-format-bindings)
+  (defun clang-format-bindings ()
+    (define-key c++-mode-map [C-M-tab] 'clang-format-buffer))
+  (setq-default indent-tabs-mode t)
   ;; set default tab char's display width to 4 spaces
-  (setq-default tab-width 4) ; emacs 23.1 to 26 default to 8
+  (setq-default tab-width 8) ; emacs 23.1 to 26 default to 8
 
   ;; set current buffer's tab char's display width to 4 spaces
   (setq tab-width 8)
@@ -385,7 +459,7 @@ you should place your code here."
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (color-theme-solarized color-theme-sanityinc-tomorrow auto-complete mmm-mode markdown-toc markdown-mode gh-md clang-format win-switch ws-butler winum volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link ace-jump-helm-line helm helm-core popup which-key undo-tree org-plus-contrib hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy))))
+    (twittering-mode engine-mode geeknote spotify helm-spotify-plus multi elfeed-goodies ace-jump-mode elfeed-org elfeed-web elfeed wakatime-mode feature-mode projectile-rails pony-mode company-tern emmet-mode js-doc tern web-beautify web-mode ggtags helm-gtags merlin ocp-indent tuareg caml utop geiser plantuml-mode powershell vimrc-mode dactyl-mode nasm-mode x86-lookup company-go flycheck-gometalinter go-eldoc go-guru go-mode racket-mode faceup flycheck-nim nim-mode flycheck-nimsuggest commenter epc concurrent company-anaconda anaconda-mode cython-mode helm-cscope helm-pydoc hy-mode live-py-mode pip-requirements py-isort pyenv-mode pythonic pytest pyvenv stickyfunc-enhance xcscope yapfify cider-eval-sexp-fu clj-refactor inflections edn cider sesman queue peg clojure-mode clojure-snippets alchemist flycheck-mix elixir-mode flycheck-credo ob-elixir company-ycmd srefactor company-emoji emoji-cheat-sheet-plus vmd-mode auctex-latexmk company-auctex auctex typo tide typescript-mode cargo racer flycheck-rust rust-mode toml-mode psci purescript-mode psc-ide erlang fsharp-mode company-quickhelp company-emacs-eclim eclim elm-mode flycheck-elm seq company-web web-completion-data helm-css-scss less-css-mode pug-mode sass-mode haml-mode scss-mode slim-mode tagedit cmm-mode company-cabal company-ghci company-ghc flycheck-haskell ghc haskell-snippets helm-hoogle hindent hlint-refactor intero haskell-mode drupal-mode php-auto-yasnippets php-extras php-mode phpcbf phpunit ein lua-mode arduino-mode matlab-mode qml-mode scad-mode stan-mode thrift faust-mode company-shell fish-mode insert-shebang org-ref key-chord helm-bibtex parsebib biblio biblio-core ahk-mode adoc-mode markup-faces ensime noflet scala-mode sbt-mode swift-mode csv-mode ess-R-data-view ctable ess-smart-equals ess julia-mode graphviz-dot-mode glsl-mode company-glsl ob-sml sml-mode omnisharp shut-up csharp-mode idris-mode prop-menu coffee-mode js2-refactor multiple-cursors livid-mode skewer-mode js2-mode simple-httpd company-dcd d-mode flycheck-dmd-dub common-lisp-snippets slime-company slime bundler chruby enh-ruby-mode minitest rbenv robe inf-ruby rspec-mode rubocop ruby-test-mode ruby-tools rvm rake sql-indent gist github-browse-file github-clone github-search magit-gh-pulls gh marshal logito pcache p4 afternoon-theme alect-themes ample-theme ample-zen-theme apropospriate-theme anti-zenburn-theme badwolf-theme birds-of-paradise-plus-theme bubbleberry-theme busybee-theme cherry-blossom-theme clues-theme color-theme-sanityinc-solarized cyberpunk-theme dakrone-theme darkburn-theme darkmine-theme darkokai-theme darktooth-theme django-theme dracula-theme espresso-theme exotica-theme farmhouse-theme flatland-theme flatui-theme gandalf-theme gotham-theme grandshell-theme gruber-darker-theme gruvbox-theme autothemer hc-zenburn-theme hemisu-theme heroku-theme inkpot-theme ir-black-theme jazz-theme jbeans-theme light-soap-theme lush-theme madhat2r-theme majapahit-theme material-theme minimal-theme moe-theme molokai-theme monokai-theme monochrome-theme mustang-theme naquadah-theme noctilux-theme obsidian-theme occidental-theme omtose-phellack-theme oldlace-theme organic-green-theme phoenix-dark-mono-theme phoenix-dark-pink-theme planet-theme professional-theme purple-haze-theme railscasts-theme rebecca-theme reverse-theme seti-theme smyx-theme soft-charcoal-theme soft-morning-theme soft-stone-theme solarized-theme soothe-theme spacegray-theme subatomic-theme subatomic256-theme sublime-themes sunny-day-theme tango-2-theme tango-plus-theme tangotango-theme tao-theme toxi-theme twilight-anti-bright-theme twilight-bright-theme twilight-theme ujelly-theme underwater-theme white-sand-theme zen-and-art-theme zenburn-theme color-identifiers-mode rainbow-identifiers rainbow-mode mu4e-alert mu4e-maildirs-extension terraform-mode hcl-mode ranger pandoc-mode ox-pandoc docker json-mode json-snatcher json-reformat docker-tramp dockerfile-mode flycheck-ycmd ycmd request-deferred deferred esh-help eshell-prompt-extras eshell-z multi-term shell-pop xterm-color vagrant vagrant-tramp systemd spray ansible ansible-doc company-ansible jinja2-mode salt-mode mmm-jinja2 yaml-mode imenu-list nginx-mode command-log-mode rebox2 edit-server gmail-message-mode ham-mode html-to-markdown flymd osx-location rase sunshine theme-changer dash-at-point counsel-dash helm-dash prodigy flycheck-ledger ledger-mode company-restclient know-your-http-well ob-http ob-restclient restclient-helm restclient puppet-mode fasd deft pdf-tools tablist pyim pyim-basedict chinese-wbim fcitx find-by-pinyin-dired ace-pinyin pinyinlib pangu-spacing youdao-dictionary names chinese-word-at-point launchctl osx-dictionary osx-trash pbcopy reveal-in-osx-finder company-nixos-options helm-nixos-options nix-mode nixos-options selectric-mode 2048-game pacmacs dash-functional sudoku typit mmt xkcd rcirc-color rcirc-notify jabber srv fsm slack emojify circe oauth2 websocket ht erc-terminal-notifier erc-gitter erc-hl-nicks erc-image erc-social-graph erc-view-log erc-yt nlinum-relative nlinum counsel-projectile counsel ivy-hydra smex swiper wgrep auto-dictionary flyspell-correct-ivy ivy flyspell-correct-helm flyspell-correct-popup flyspell-correct flyspell-popup floobits mwim unfill ox-twbs ox-gfm ox-reveal ibuffer-projectile bracketed-paste origami hl-anything evil-snipe evil-commentary evil-cleverparens paredit smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download magit-gitflow htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter fuzzy flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit ghub treepy let-alist graphql with-editor disaster diff-hl company-statistics company-c-headers cmake-mode auto-yasnippet yasnippet ac-ispell company color-theme-solarized color-theme-sanityinc-tomorrow auto-complete mmm-mode markdown-toc markdown-mode gh-md clang-format win-switch ws-butler winum volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link ace-jump-helm-line helm helm-core popup which-key undo-tree org-plus-contrib hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
