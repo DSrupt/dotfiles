@@ -84,4 +84,6 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 export PATH=$PATH:/depot_tools
 alias compile="g++ --std=c++14 -g -O0"
+alias gc="git clone"
+alias v="vagrant "
 export PATH=/Users/akhilthampy/dev/istio-1.0.1/bin:/usr/local/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/TeX/texbin:/depot_tools
