@@ -25,6 +25,10 @@ call plug#begin('~/.vim/plugged')
     Plug 'rhysd/vim-clang-format'
 	Plug 'kana/vim-operator-user'
     Plug 'scrooloose/nerdcommenter'
+    Plug 'altercation/vim-colors-solarized'
+    Plug 'aradunovic/perun.vim'
+    Plug 'christoomey/vim-tmux-navigator'
+    Plug 'sjl/badwolf'
 call plug#end()
 
 let mapleader = '`'
@@ -45,11 +49,19 @@ noremap /l :tabnext<CR>
 
 " M-n create new tab
 nnoremap /n :tabnew<CR>
+nnoremap ;w :w<CR>
+nnoremap ;q :q<CR>
 
 nnoremap ;w :w<CR>
 
+nnoremap ;n :noh<CR>
+nnoremap ;t :Tags<CR>
 nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
+
+" {Un}Comment cout statements
+nnoremap <leader>[ :g/\<cout\>/s/\<cout\>/\/\/cout/gi <CR>
+nnoremap <leader>] :g/\/\/cout/s/\/\/cout/cout/gi <CR>
 
 " Use | and _ to split windows (while preserving original behaviour of [count]bar and [count]_).
 nnoremap <expr><silent> <Bar> v:count == 0 ? "<C-W>v<C-W><Right>" : ":<C-U>normal! 0".v:count."<Bar><CR>"
@@ -72,6 +84,11 @@ set textwidth=80
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 "autocmd vimenter * NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+autocmd BufWritePre *cc :ClangFormat
+autocmd BufWritePost *vimrc :so ~/.vimrc 
+
+
 iab xdate <c-r>=strftime("%d/%m/%y %H:%M:%S")<cr>
 
 let g:tagbar_type_go = {
@@ -103,5 +120,3 @@ let g:tagbar_type_go = {
 \ }
 
 
-nnoremap <leader>[ :g/\<cout\>/s/\<cout\>/\/\/cout/gi <CR>
-nnoremap <leader>] :g/\/\/cout/s/\/\/cout/cout/gi <CR>
