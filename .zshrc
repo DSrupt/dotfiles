@@ -49,7 +49,7 @@ ZSH_THEME="lambda-gitster"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git osx z vi-mode)
+plugins=(git osx z )
 
 # User configuration
 
@@ -86,4 +86,11 @@ export PATH=$PATH:/depot_tools
 alias compile="g++ --std=c++14 -g -O0"
 alias gc="git clone"
 alias v="vagrant "
+alias k="kubectl "
 export PATH=/Users/akhilthampy/dev/istio-1.0.1/bin:/usr/local/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/TeX/texbin:/depot_tools
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/akhilthampy/dev/kube/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/akhilthampy/dev/kube/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/akhilthampy/dev/kube/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/akhilthampy/dev/kube/google-cloud-sdk/completion.zsh.inc'; fi
