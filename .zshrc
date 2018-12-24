@@ -83,7 +83,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 export PATH=$PATH:/depot_tools
-alias compile="g++ --std=c++14 -g -O0"
+alias compile="g++ --std=c++14 -g -O0 -Ifmt-5.2.1/include -lfmt"
 alias gc="git clone"
 alias v="vagrant "
 alias k="kubectl "
