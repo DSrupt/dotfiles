@@ -87,6 +87,7 @@ alias compile="g++ --std=c++14 -g -O0 -Ifmt-5.2.1/include -lfmt"
 alias gc="git clone"
 alias v="vagrant "
 alias k="kubectl "
+alias w2="watch "
 export PATH=/Users/akhilthampy/dev/istio-1.0.1/bin:/usr/local/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/TeX/texbin:/depot_tools
 
 # The next line updates PATH for the Google Cloud SDK.
