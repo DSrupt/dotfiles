@@ -88,7 +88,10 @@ alias gc="git clone"
 alias v="vagrant "
 alias k="kubectl "
 alias w2="watch "
-export PATH=/Users/akhilthampy/dev/istio-1.0.1/bin:/usr/local/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/TeX/texbin:/depot_tools
+function ldate(){
+    date -v"-$1d"
+}
+export PATH=$PATH:/Users/akhilthampy/dev/istio-1.0.1/bin:/usr/local/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/TeX/texbin:/depot_tools
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/akhilthampy/dev/kube/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/akhilthampy/dev/kube/google-cloud-sdk/path.zsh.inc'; fi
