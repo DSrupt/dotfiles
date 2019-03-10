@@ -29,30 +29,33 @@ call plug#begin('~/.vim/plugged')
     Plug 'aradunovic/perun.vim'
     Plug 'christoomey/vim-tmux-navigator'
     Plug 'sjl/badwolf'
+    Plug 'Chiel92/vim-autoformat'
+    Plug 'joshdick/onedark.vim'
 call plug#end()
 
 let mapleader = '`'
 
 set t_Co=256
 set termguicolors
-colo office-light
+colo onedark 
 
 map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
+noremap <leader>t :Tags<CR>
+
 " M-h go to tab left
-noremap /t :Tags<CR>
+noremap <leader>h :tabnext<CR>
 " M-l go to tab right
-noremap /l :tabnext<CR>
+noremap <leader>l :tabnext<CR>
 
 " M-n create new tab
-nnoremap /n :tabnew<CR>
-nnoremap ;w :w<CR>
-nnoremap ;q :q<CR>
+nnoremap <leader>n :tabnew<CR>
 
 nnoremap ;w :w<CR>
+nnoremap ;q :q<CR>
 
 nnoremap ;n :noh<CR>
 nnoremap ;t :Tags<CR>
@@ -81,7 +84,8 @@ set expandtab
 filetype indent on
 set textwidth=80
 
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+autocmd FileType *.c setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
 "autocmd vimenter * NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
