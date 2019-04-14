@@ -91,10 +91,18 @@ alias w2="watch "
 function ldate(){
     date -v"-$1d"
 }
-export PATH=$PATH:/Users/akhilthampy/dev/istio-1.0.1/bin:/usr/local/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/TeX/texbin:/depot_tools
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/akhilthampy/dev/kube/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/akhilthampy/dev/kube/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/akhilthampy/dev/kube/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/akhilthampy/dev/kube/google-cloud-sdk/completion.zsh.inc'; fi
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export GOBIN="$HOME/dev/go/bin"
+export GOROOT=/usr/local/go
+
+export PATH=$PATH:/Users/akhilthampy/dev/istio-1.0.1/bin:/usr/local/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/TeX/texbin:/depot_tools:$GOBIN
