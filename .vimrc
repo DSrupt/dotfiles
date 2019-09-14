@@ -146,3 +146,4 @@ let g:tagbar_type_go = {
 \ }
 
 
+set shiftwidth=2
