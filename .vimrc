@@ -13,7 +13,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'ntpeters/vim-better-whitespace'
     Plug 'tpope/vim-fugitive'
     Plug 'ervandew/supertab' " AutoComplete
-    Plug 'ycm-core/YouCompleteMe'
+    " Plug 'ycm-core/YouCompleteMe'
     Plug 'kien/ctrlp.vim' "Fuzzy file serach
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
@@ -34,7 +34,25 @@ call plug#begin('~/.vim/plugged')
     Plug 'joshdick/onedark.vim'
     Plug 'sheerun/vim-polyglot'
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+    Plug 'prabirshrestha/async.vim'
+    Plug 'prabirshrestha/vim-lsp'
+    Plug 'ajh17/vimcompletesme'
 call plug#end()
+
+if executable('clangd')
+    augroup lsp_clangd
+        autocmd!
+        autocmd User lsp_setup call lsp#register_server({
+                    \ 'name': 'clangd',
+                    \ 'cmd': {server_info->['clangd']},
+                    \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+                    \ })
+        autocmd FileType c setlocal omnifunc=lsp#complete
+        autocmd FileType cpp setlocal omnifunc=lsp#complete
+        autocmd FileType objc setlocal omnifunc=lsp#complete
+        autocmd FileType objcpp setlocal omnifunc=lsp#complete
+    augroup end
+endif
 
 let mapleader = '`'
 
@@ -62,8 +80,8 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 
-nnoremap H gT
-nnoremap L gt
+nnoremap ;h gT
+nnoremap ;l gt
 
 nnoremap <leader>t :tabnew<CR>
 
