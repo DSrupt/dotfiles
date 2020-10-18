@@ -12,32 +12,42 @@ call plug#begin('~/.vim/plugged')
     Plug 'easymotion/vim-easymotion'
     Plug 'ntpeters/vim-better-whitespace'
     Plug 'tpope/vim-fugitive'
-    Plug 'ervandew/supertab' " AutoComplete
+    " Plug 'ervandew/supertab' " AutoComplete
     " Plug 'ycm-core/YouCompleteMe'
     Plug 'kien/ctrlp.vim' "Fuzzy file serach
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-    Plug 'junegunn/fzf.vim'
     Plug 'gabrielelana/vim-markdown'
 	Plug 'avakhov/vim-yaml'
-    Plug 'majutsushi/tagbar'
 	Plug 'beautify-web/js-beautify'
-    Plug 'nightsense/office'
 	Plug 'bfrg/vim-cpp-modern'
     Plug 'rhysd/vim-clang-format'
-	Plug 'kana/vim-operator-user'
-    Plug 'scrooloose/nerdcommenter'
-    Plug 'altercation/vim-colors-solarized'
-    Plug 'aradunovic/perun.vim'
     Plug 'christoomey/vim-tmux-navigator'
-    Plug 'sjl/badwolf'
-    Plug 'Chiel92/vim-autoformat'
     Plug 'joshdick/onedark.vim'
     Plug 'sheerun/vim-polyglot'
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
     Plug 'prabirshrestha/async.vim'
     Plug 'prabirshrestha/vim-lsp'
-    Plug 'ajh17/vimcompletesme'
+
+    " Plug 'ajh17/vimcompletesme'
+
+
+    Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+    Plug 'neoclide/coc-python'
+
+    Plug 'tpope/vim-commentary'
+    Plug 'liuchengxu/vista.vim'
+    Plug 'jeetsukumaran/vim-pythonsense'
+    Plug 'jiangmiao/auto-pairs'
+    Plug 'dense-analysis/ale'
+
 call plug#end()
+
+au BufNewFile,BufRead *.py set foldmethod=indent
+au BufNewFile,BufRead *.py set expandtab
+au BufNewFile,BufRead *.py set autoindent
+au BufNewFile,BufRead *.py set tabstop=4
+au BufNewFile,BufRead *.py set softtabstop=4
+au BufNewFile,BufRead *.py set shiftwidth=4
 
 if executable('clangd')
     augroup lsp_clangd
@@ -102,13 +112,9 @@ nnoremap <expr><silent> _     v:count == 0 ? "<C-W>s<C-W><Down>"  : ":<C-U>norma
 set number
 set splitbelow
 set splitright
-set foldmethod=syntax
+set foldmethod=indent
 set hlsearch
 
-set tabstop=4
-set softtabstop=4
-set shiftwidth=2
-set expandtab
 
 filetype indent on
 set textwidth=80
@@ -154,3 +160,42 @@ let g:tagbar_type_go = {
 \ }
 
 
+" Check Python files with flake8 and pylint.
+let b:ale_linters = ['yapf', 'flake8', 'pylint']
+" Fix Python files with autopep8 and yapf.
+"let b:ale_fixers = ['autopep8', 'yapf']
+
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace', 'yapf']
+\}
+let g:ale_fix_on_save = 1
+set statusline^=%{coc#status()}
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" The Silver Searcher
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
+
+" bind K to grep word under cursor
+nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
