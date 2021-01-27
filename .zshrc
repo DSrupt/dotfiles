@@ -106,3 +106,4 @@ export GOBIN="$HOME/dev/go/bin"
 export GOROOT=/usr/local/go
 
 export PATH=$PATH:/Users/akhilthampy/dev/istio-1.0.1/bin:/usr/local/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/TeX/texbin:/depot_tools:$GOBIN
+export GPG_TTY=$(tty)
