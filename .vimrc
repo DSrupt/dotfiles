@@ -96,8 +96,8 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-nnoremap <S-h> gT
-nnoremap <S-l> gt
+nnoremap <C-{> gT
+nnoremap <C-}> gt
 
 nnoremap <leader>t :tabnew<CR>
 
