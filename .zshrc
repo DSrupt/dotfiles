@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/akhilthampy/.oh-my-zsh
+export ZSH=${HOME}/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -82,12 +82,14 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-export PATH=$PATH:/depot_tools
+export PATH=$PATH:~/dev/depot_tools
 alias compile="g++ --std=c++14 -g -O0 -Ifmt-5.2.1/include -lfmt"
 alias gc="git clone"
 alias v="vagrant "
 alias k="kubectl "
 alias w2="watch "
+alias vim="nvim"
+
 function ldate(){
     date -v"-$1d"
 }
@@ -103,7 +105,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export GOBIN="$HOME/dev/go/bin"
-export GOROOT=/usr/local/go
 
 export PATH=$PATH:/Users/akhilthampy/dev/istio-1.0.1/bin:/usr/local/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/TeX/texbin:/depot_tools:$GOBIN
 export GPG_TTY=$(tty)
