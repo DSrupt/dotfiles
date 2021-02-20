@@ -88,7 +88,7 @@ alias gc="git clone"
 alias v="vagrant "
 alias k="kubectl "
 alias w2="watch "
-alias vim="nvim"
+# alias vim="nvim"
 
 function ldate(){
     date -v"-$1d"
